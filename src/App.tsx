@@ -1,24 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react"; 
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="bg-gray-100 p-8">
+      <h1 className="text-3xl font-bold underline text-center text-blue-600 capitalize ">
+        Hello world!, this is Mohamed's Portfolio
+      </h1>
+      <p className="bg-slate-600 p-6 my-10 w-fit mx-auto text-center text-white m-aut text-2xl rounded " >starting my portfolio journey with ambition and hopes</p>
+      <span><b className="text-3xl capitalize  p-2 block w-fit mx-auto  ">here we go!</b></span>
     </div>
   );
 }
