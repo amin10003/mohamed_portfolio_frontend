@@ -1,15 +1,37 @@
-import React from "react"; 
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Hobbies from "./pages/Hobbies";
+import Projects from "./pages/Projects";
+import Acheivemets from "./pages/Acheivements";
+import Header from "./components/Header";   
+import Footer from "./components/Footer";
+import MenuIcon from "./components/MenuIcon";
+import "./App.css";
+import profile from "./pages/Profile";
+import Blog from "./pages/Blog";
+
 
 const App: React.FC = () => {
-  return (
-    <div className="bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold underline text-center text-blue-600 capitalize ">
-        Hello world!, this is Mohamed's Portfolio
-      </h1>
-      <p className="bg-slate-600 p-6 my-10 w-fit mx-auto text-center text-white m-aut text-2xl rounded " >starting my portfolio journey with ambition and hopes</p>
-      <span><b className="text-3xl capitalize  p-2 block w-fit mx-auto  ">here we go!</b></span>
-    </div>
-  );
+    return (
+        <Router>
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-1 overflow-y-auto  p-4">  
+                    <Switch>
+                        <Route path="/" exact component={profile} />
+                        <Route path="/profile" component={profile} />
+                        <Route path="/hobbies" component={Hobbies} />
+                        <Route path="/projects" component={Projects} />
+                        <Route path="/acheivements" component={Acheivemets} />
+                        <Route path="/blog" component={Blog} />
+                    </Switch>
+                </main>
+                <Footer />
+            </div>
+        </Router>
+    );
+
 }
+
 
 export default App;
