@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Hobbies from "./pages/Hobbies";
 import Projects from "./pages/Projects";
-import Acheivemets from "./pages/Acheivements";
+import Achievements from "./pages/Achievements"
 import Header from "./components/Header";   
 import Footer from "./components/Footer";
 import MenuIcon from "./components/MenuIcon";
@@ -23,7 +23,7 @@ const App: React.FC = () => {
                         <Route path="/profile" element={<Profile/>} />
                         <Route path="/hobbies" element={<Hobbies/>} />
                         <Route path="/projects" element={<Projects/>} />
-                        <Route path="/acheivements" element={<Acheivemets/>} />
+                        <Route path="/achievements" element={<Achievements/>} />
                         <Route path="/blog" element={<Blog/>} />
                     </Routes>
                 </main>
