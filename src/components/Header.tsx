@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
+    <header className="bg-gray-800 text-white p-8 flex justify-between items-center">
       <div className="text-2xl font-bold">My Portfolio</div>
       <nav className="space-x-4">
         <NavLink
@@ -23,6 +23,14 @@ const Header: React.FC = () => {
         >
           Profile
         </NavLink>
+         <NavLink
+          to="/cv"
+          className={({ isActive }) =>
+            isActive ? "underline font-semibold" : "hover:underline"
+          }
+        >
+          CV
+        </NavLink>
         <NavLink
           to="/projects"
           className={({ isActive }) =>
@@ -31,6 +39,7 @@ const Header: React.FC = () => {
         >
           Projects
         </NavLink>
+        
         <NavLink
           to="/achievements"
           className={({ isActive }) =>
@@ -55,6 +64,7 @@ const Header: React.FC = () => {
         >
           Blog
         </NavLink>
+       
       </nav>
     </header>
   );

@@ -1,6 +1,9 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import api from "../api/axiosConfig";
 
 interface ProfileData {
+  id?: number;
   name: string;
   bio: string;
   nationality: string;
@@ -18,54 +21,71 @@ interface ProfileData {
   willingToRelocate: boolean;
   languages: string;
   skills: string;
-  photoUrl: string;
+  photoUrl?: string; // made optional
 }
 
+// ✅ Fetch the first valid profile (instead of hardcoding /1)
+const fetchProfile = async (): Promise<ProfileData> => {
+  const { data } = await api.get(`/profiles`);
+  if (!data || data.length === 0) throw new Error("No profiles found");
+  // Pick the profile with id = 2 (most complete), fallback to the first one
+  const profile = data.find((p: any) => p.id === 2) || data[0];
+  return profile;
+};
+
 const Profile: React.FC = () => {
-  // Static profile data (replace later with API or DB data)
-  const profile: ProfileData = {
-    name: "Mohamed Ibrahim",
-    bio: "Frontend Developer passionate about building beautiful, responsive web apps using React and Tailwind CSS.",
-    nationality: "Somali",
-    availability: "Immediate",
-    location: "Nairobi, Kenya",
-    dateOfBirth: "2000-06-15",
-    email: "mohamed@example.com",
-    phone: "+254712345678",
-    address: "Nairobi, Kenya",
-    github: "https://github.com/mohamed",
-    linkedin: "https://linkedin.com/in/mohamed",
-    expectedSalary: "KES 80,000",
-    noticePeriod: "1 Month",
-    referees: "Available upon request",
-    willingToRelocate: true,
-    languages: "English, Swahili, Somali",
-    skills: "React, Tailwind CSS, Node.js, Git, JavaScript",
-    photoUrl: "profile.png", // replace with your photo
-  };
+  const { data: profile, isLoading, isError } = useQuery<ProfileData>({
+    queryKey: ["profile"],
+    queryFn: fetchProfile,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-300 text-lg">
+        Loading profile...
+      </div>
+    );
+  }
+
+  if (isError || !profile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-400 text-lg">
+        Failed to load profile.
+      </div>
+    );
+  }
 
   return (
-    <section className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8">
+    <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8 rounded-2xl" >
+      <div className="w-full max-w-3xl bg-gray-800/60 backdrop-blur-md shadow-2xl rounded-3xl p-10 border border-gray-700 animate-fadeIn">
         {/* Profile Photo & Name */}
-        <div className="flex flex-col items-center text-center mb-6">
+        <div className="flex flex-col items-center text-center mb-8">
           <img
-            src={profile.photoUrl}
+            src={
+              profile.photoUrl ||
+              "profile.png"
+            }
             alt={`${profile.name} photo`}
-            className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-md mb-4"
+            className="w-36 h-36 rounded-full object-cover border-4 border-emerald-400 shadow-lg mb-4 transform hover:scale-105 transition duration-500"
           />
-          <h1 className="text-3xl font-bold text-gray-800">{profile.name}</h1>
-          <p className="text-gray-600 mt-2">{profile.bio}</p>
+          <h1 className="text-4xl font-extrabold text-emerald-300 font-sans tracking-wide drop-shadow-md">
+            {profile.name}
+          </h1>
+          <p className="text-gray-300 mt-3 text-lg italic leading-relaxed">
+            {profile.bio}
+          </p>
         </div>
 
         {/* Info Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           {/* Personal Info */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Personal Info</h2>
-            <ul className="text-gray-700 space-y-1">
+          <div className="bg-gray-700/50 rounded-2xl p-5 shadow-lg hover:shadow-emerald-500/20 transition duration-300">
+            <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
+              Personal Info
+            </h2>
+            <ul className="text-gray-200 space-y-2 text-base">
               <li><strong>Nationality:</strong> {profile.nationality}</li>
-              <li><strong>Date of Birth:</strong> {profile.dateOfBirth}</li>
+              <li><strong>Date of Birth:</strong> {new Date(profile.dateOfBirth).toDateString()}</li>
               <li><strong>Location:</strong> {profile.location}</li>
               <li><strong>Availability:</strong> {profile.availability}</li>
               <li>
@@ -76,9 +96,11 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Contact Info</h2>
-            <ul className="text-gray-700 space-y-1">
+          <div className="bg-gray-700/50 rounded-2xl p-5 shadow-lg hover:shadow-emerald-500/20 transition duration-300">
+            <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
+              Contact Info
+            </h2>
+            <ul className="text-gray-200 space-y-2 text-base">
               <li><strong>Email:</strong> {profile.email}</li>
               <li><strong>Phone:</strong> {profile.phone}</li>
               <li><strong>Address:</strong> {profile.address}</li>
@@ -87,21 +109,47 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Professional Info */}
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Professional Info</h2>
-          <ul className="text-gray-700 space-y-1">
+        <div className="mt-8 bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300">
+          <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
+            Professional Info
+          </h2>
+          <ul className="text-gray-200 space-y-2 text-base">
             <li>
               <strong>GitHub:</strong>{" "}
-              <a href={profile.github} className="text-blue-600 hover:underline">
+              <a
+                href={
+                  profile.github.startsWith("http")
+                    ? profile.github
+                    : `https://github.com/${profile.github}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-300 hover:underline"
+              >
                 {profile.github}
               </a>
             </li>
+
+            {/* ✅ Correct LinkedIn link handling */}
             <li>
               <strong>LinkedIn:</strong>{" "}
-              <a href={profile.linkedin} className="text-blue-600 hover:underline">
+              <a
+                href={
+                  profile.linkedin?.startsWith("http")
+                    ? profile.linkedin
+                    : `https://linkedin.com/in/${profile.linkedin
+                        .trim()
+                        .replace(/\s+/g, "-")
+                        .toLowerCase()}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-300 hover:underline"
+              >
                 {profile.linkedin}
               </a>
             </li>
+
             <li><strong>Expected Salary:</strong> {profile.expectedSalary}</li>
             <li><strong>Notice Period:</strong> {profile.noticePeriod}</li>
             <li><strong>Referees:</strong> {profile.referees}</li>
@@ -109,22 +157,23 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Skills */}
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Skills</h2>
-          <p className="text-gray-700">{profile.skills}</p>
+        <div className="mt-8 bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300">
+          <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
+            Skills
+          </h2>
+          <p className="text-gray-200 text-base leading-relaxed">
+            {profile.skills}
+          </p>
         </div>
 
         {/* Languages */}
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Languages</h2>
-          <p className="text-gray-700">{profile.languages}</p>
-        </div>
-
-        {/* Edit Button */}
-        <div className="mt-8 text-right">
-          <button className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-            Edit Profile
-          </button>
+        <div className="mt-6 bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300">
+          <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
+            Languages
+          </h2>
+          <p className="text-gray-200 text-base leading-relaxed">
+            {profile.languages}
+          </p>
         </div>
       </div>
     </section>

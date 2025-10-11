@@ -5,7 +5,7 @@ const Home: React.FC = () => {
     <div className="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
       <div className="flex items-center gap-4 mb-6">
         <img
-          src="/profile.jpg" // make sure the file is in public/
+          src="/profile.png" // make sure the file is in public/
           alt="profile avatar"
           className="w-16 h-16 rounded-full shadow-md object-cover"
         />
