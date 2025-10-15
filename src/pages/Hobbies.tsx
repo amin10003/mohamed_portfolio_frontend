@@ -1,32 +1,45 @@
 import React from "react";
 
 const Hobbies: React.FC = () => (
-  <section className="p-6">
-    <h1 className="text-3xl font-bold mb-6">Hobbies</h1>
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <div className="p-4 bg-white rounded-lg shadow-md">
-        ⚽ <span className="font-semibold">Football</span>
-        <p className="text-gray-600 mt-2">
-          I enjoy playing football with friends during weekends. It keeps me active and teaches teamwork.
-        </p>
-      </div>
-      <div className="p-4 bg-white rounded-lg shadow-md">
-        💻 <span className="font-semibold">Coding Challenges</span>
-        <p className="text-gray-600 mt-2">
-          Solving algorithm problems on platforms like LeetCode and CodeWars to sharpen problem-solving skills.
-        </p>
-      </div>
-      <div className="p-4 bg-white rounded-lg shadow-md">
-        📖 <span className="font-semibold">Reading Tech Blogs</span>
-        <p className="text-gray-600 mt-2">
-          Staying updated with the latest trends in JavaScript, React, and software engineering best practices.
-        </p>
-      </div>
-      <div className="p-4 bg-white rounded-lg shadow-md">
-        🎨 <span className="font-semibold">UI Design Experiments</span>
-        <p className="text-gray-600 mt-2">
-          I love experimenting with TailwindCSS, animations, and creating modern UI layouts.
-        </p>
+  <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8">
+    <div className="w-full max-w-4xl bg-gray-800/60 backdrop-blur-md rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fadeIn text-gray-200">
+      <h1 className="text-4xl font-extrabold text-emerald-300 mb-8 text-center tracking-wide">
+        Hobbies
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {[
+          {
+            icon: "⚽",
+            title: "Football",
+            desc: "Playing football with friends helps me stay active and build teamwork.",
+          },
+          {
+            icon: "💻",
+            title: "Coding Challenges",
+            desc: "I enjoy solving problems on LeetCode and CodeWars to improve logical thinking.",
+          },
+          {
+            icon: "📖",
+            title: "Reading Tech Blogs",
+            desc: "Keeping up with the latest in JavaScript, React, and modern web technologies.",
+          },
+          {
+            icon: "🎨",
+            title: "UI Design Experiments",
+            desc: "I love creating new UI layouts and experimenting with TailwindCSS.",
+          },
+        ].map((hobby, idx) => (
+          <div
+            key={idx}
+            className="bg-gray-700/50 p-6 rounded-2xl border border-gray-700 hover:border-emerald-400 hover:shadow-emerald-500/20 transition duration-300"
+          >
+            <div className="text-3xl mb-2">{hobby.icon}</div>
+            <h2 className="text-xl font-semibold text-emerald-400 mb-2">
+              {hobby.title}
+            </h2>
+            <p className="text-gray-300">{hobby.desc}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>

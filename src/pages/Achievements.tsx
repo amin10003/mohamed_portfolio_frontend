@@ -1,58 +1,64 @@
 import React from "react";
+import { FaAward, FaTrophy, FaStar } from "react-icons/fa";
 
 const Achievements: React.FC = () => {
+  const achievements = [
+    {
+      icon: <FaAward className="text-emerald-400 text-3xl mb-2" />,
+      title: "Frontend Development Mastery",
+      description:
+        "Completed full learning path from HTML, CSS, Git, GitHub, and Linux to JavaScript and React with Tailwind CSS.",
+      year: "2024",
+    },
+    {
+      icon: <FaTrophy className="text-emerald-400 text-3xl mb-2" />,
+      title: "Portfolio Website Launch",
+      description:
+        "Designed and developed a personal portfolio showcasing projects, profile, and CV using React + TypeScript.",
+      year: "2025",
+    },
+    {
+      icon: <FaStar className="text-emerald-400 text-3xl mb-2" />,
+      title: "Community Recognition",
+      description:
+        "Recognized by peers for consistency, clean design, and strong dedication to learning modern frontend tools.",
+      year: "2025",
+    },
+  ];
+
   return (
-    <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8 rounded-2xl">
-      <div className="w-full max-w-3xl bg-gray-800/60 backdrop-blur-md shadow-2xl rounded-3xl p-10 border border-gray-700 animate-fadeIn">
-        
-        {/* Header Section */}
-        <div className="flex flex-col items-center text-center mb-8">
-          <img
-            src="profile.png" // 🏆 You can replace with any icon/image
-            alt="Achievements Icon"
-            className="w-36 h-36 rounded-full object-cover border-4 border-emerald-400 shadow-lg mb-4 transform hover:scale-105 transition duration-500"
-          />
-          <h1 className="text-4xl font-extrabold text-emerald-300 font-sans tracking-wide drop-shadow-md">
+    <section className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 p-10">
+      <div className="max-w-5xl mx-auto bg-gray-800/40 shadow-2xl rounded-2xl p-10 border border-gray-700 backdrop-blur-sm">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-extrabold text-emerald-300 mb-2 tracking-wide">
             Achievements
           </h1>
-          <p className="text-gray-300 mt-3 text-lg italic leading-relaxed">
-            Highlights of my journey and milestones that shaped my career.
+          <p className="text-gray-200 text-lg italic">
+            Milestones that mark my growth and dedication as a Frontend Developer
           </p>
         </div>
 
-        {/* Achievement Cards */}
-        <div className="space-y-6">
-          <div className="bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300 hover:scale-[1.02]">
-            🏆 Completed{" "}
-            <strong className="text-emerald-300">
-              100+ hours of JavaScript practice
-            </strong>{" "}
-            and built several portfolio-ready projects.
-          </div>
+        {/* Achievements Grid */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {achievements.map((ach, index) => (
+            <div
+              key={index}
+              className="bg-gray-700/30 p-6 rounded-xl shadow-lg text-center border border-gray-700 hover:scale-105 hover:border-emerald-400 transition-transform duration-300"
+            >
+              {ach.icon}
+              <h2 className="text-xl font-semibold text-emerald-300 mb-1">
+                {ach.title}
+              </h2>
+              <p className="text-gray-200 text-sm mb-2">{ach.description}</p>
+              <p className="text-gray-400 text-xs italic">{ach.year}</p>
+            </div>
+          ))}
+        </div>
 
-          <div className="bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300 hover:scale-[1.02]">
-            🥇 Winner —{" "}
-            <strong className="text-emerald-300">
-              Local Hackathon (UI/UX Category)
-            </strong>{" "}
-            for designing an accessible web app.
-          </div>
-
-          <div className="bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300 hover:scale-[1.02]">
-            🚀 Published an{" "}
-            <strong className="text-emerald-300">
-              open-source React UI component library
-            </strong>{" "}
-            with 500+ downloads.
-          </div>
-
-          <div className="bg-gray-700/50 rounded-2xl p-6 shadow-lg hover:shadow-emerald-500/20 transition duration-300 hover:scale-[1.02]">
-            📜 Earned certifications in{" "}
-            <strong className="text-emerald-300">
-              React, TypeScript, and TailwindCSS
-            </strong>
-            .
-          </div>
+        {/* Footer Note */}
+        <div className="text-center mt-12 text-gray-400 text-sm border-t border-gray-700 pt-4">
+          “Every achievement is a step closer to mastering the art of code and design.”
         </div>
       </div>
     </section>

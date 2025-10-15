@@ -2,33 +2,36 @@ import React from "react";
 
 const Home: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
-      <div className="flex items-center gap-4 mb-6">
-        <img
-          src="/profile.png" // make sure the file is in public/
-          alt="profile avatar"
-          className="w-16 h-16 rounded-full shadow-md object-cover"
-        />
-        <h1 className="text-4xl font-bold text-gray-800">
-          Welcome to My Portfolio
-        </h1>
+    <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8">
+      <div className="w-full max-w-4xl bg-gray-800/60 backdrop-blur-md rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fadeIn text-gray-200">
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/profile.png"
+            alt="Mohamed Ibrahim Yusuf"
+            className="w-32 h-32 rounded-full border-4 border-emerald-400 shadow-lg mb-4 object-cover"
+          />
+          <h1 className="text-4xl font-extrabold text-emerald-300 mb-3 tracking-wide">
+            Welcome to My Portfolio
+          </h1>
+          <p className="text-lg text-gray-300 mb-6 leading-relaxed max-w-2xl">
+            Hi 👋, I’m <span className="text-emerald-300 font-semibold">Mohamed Ibrahim Yusuf</span>, a frontend developer passionate about building beautiful, responsive, and interactive web experiences.
+          </p>
+          <div className="text-left w-full sm:w-3/4 mt-6">
+            <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
+              Explore My Work
+            </h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-300">
+              <li><strong>Profile</strong> — Learn more about me</li>
+              <li><strong>Projects</strong> — View my latest creations</li>
+              <li><strong>Achievements</strong> — Key milestones & recognition</li>
+              <li><strong>CV</strong> — My educational and professional journey</li>
+              <li><strong>Blog</strong> — Insights, ideas, and reflections</li>
+              <li><strong>Hobbies</strong> — What I do beyond coding</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <p className="text-lg text-gray-700 mb-4">
-        Hi, I’m Mohamed Ibrahim Yusuf 👋. This is my personal portfolio where I share
-        my journey as a developer, showcase my projects, highlight my achievements,
-        and talk about my hobbies and interests.
-      </p>
-      <p className="text-lg text-gray-700 mb-4">
-        Use the navigation above to explore different sections:
-      </p>
-      <ul className="list-disc list-inside text-gray-600 space-y-2">
-        <li><strong>Profile</strong> – Learn more about me</li>
-        <li><strong>Projects</strong> – Check out my recent work</li>
-        <li><strong>Achievements</strong> – Things I’m proud of</li>
-        <li><strong>Hobbies</strong> – What I do for fun</li>
-        <li><strong>Blog</strong> – Read my latest thoughts</li>
-      </ul>
-    </div>
+    </section>
   );
 };
 

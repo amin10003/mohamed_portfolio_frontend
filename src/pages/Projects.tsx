@@ -33,44 +33,40 @@ const Projects: React.FC = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8 rounded-2xl">
-      <div className="w-full max-w-3xl bg-gray-800/60 backdrop-blur-md shadow-2xl rounded-3xl p-10 border border-gray-700 animate-fadeIn">
-        
-        {/* Header Section */}
-        <div className="flex flex-col items-center text-center mb-8">
+    <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8">
+      <div className="w-full max-w-5xl bg-gray-800/60 backdrop-blur-md rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fadeIn text-gray-200">
+        <div className="text-center mb-10">
           <img
-            src="profile.png" // 🖥️ optional: replace with your project icon
-            alt="Projects Icon"
-            className="w-36 h-36 rounded-full object-cover border-4 border-emerald-400 shadow-lg mb-4 transform hover:scale-105 transition duration-500"
+            src="/profile.png"
+            alt="Projects"
+            className="w-32 h-32 rounded-full border-4 border-emerald-400 shadow-lg mx-auto mb-4 object-cover"
           />
-          <h1 className="text-4xl font-extrabold text-emerald-300 font-sans tracking-wide drop-shadow-md">
+          <h1 className="text-4xl font-extrabold text-emerald-300 mb-2 tracking-wide">
             Projects
           </h1>
-          <p className="text-gray-300 mt-3 text-lg italic leading-relaxed">
-            A collection of my featured works and hands-on development projects.
+          <p className="text-gray-400 italic">
+            A collection of my featured works and practical experiences.
           </p>
         </div>
 
-        {/* Projects List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="bg-gray-700/50 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-emerald-400 hover:shadow-emerald-500/20 transition duration-300 hover:scale-[1.02]"
+              className="bg-gray-700/50 rounded-2xl p-6 border border-gray-700 hover:border-emerald-400 shadow-md hover:shadow-emerald-500/20 transition duration-300"
             >
-              <h2 className="text-2xl font-semibold text-emerald-400 mb-2">
+              <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
                 {project.title}
               </h2>
-              <p className="text-gray-200 text-base leading-relaxed mb-4">
+              <p className="text-gray-300 mb-4 leading-relaxed">
                 {project.description}
               </p>
-
               <div className="flex gap-3">
                 <a
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 text-sm rounded-lg border border-gray-600 text-gray-200 hover:text-emerald-300 hover:border-emerald-400 transition"
+                  className="px-4 py-2 text-sm border border-gray-600 rounded-lg hover:border-emerald-400 hover:text-emerald-300 transition"
                 >
                   Demo
                 </a>
@@ -78,7 +74,7 @@ const Projects: React.FC = () => {
                   href={project.code}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 text-sm rounded-lg bg-emerald-500/20 border border-emerald-400 text-emerald-300 hover:bg-emerald-500/30 transition"
+                  className="px-4 py-2 text-sm border border-emerald-400 bg-emerald-500/20 rounded-lg hover:bg-emerald-500/30 transition"
                 >
                   Code
                 </a>
