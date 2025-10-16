@@ -68,9 +68,9 @@ const Profile: React.FC = () => {
     <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-6">
       <div className="max-w-5xl w-full bg-gray-800/70 backdrop-blur-lg rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fadeIn">
         {/* ---------- Header ---------- */}
-        <div className="flex flex-col items-center relative">
-          {/* Floating Icons */}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-10 flex space-x-4 animate-bounce-slow">
+        <div className="flex flex-col items-center relative mb-4">
+          {/* Floating Icons - Fixed positioning */}
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 flex space-x-4 animate-bounce-slow z-10">
             <FaFileAlt size={26} className="text-emerald-300 hover:scale-125 transition-transform duration-500" />
             <FaLaptopCode size={26} className="text-emerald-300 hover:scale-125 transition-transform duration-500" />
             <SiJavascript size={26} color="#F7DF1E" className="hover:scale-125 transition-transform duration-500" />
@@ -80,7 +80,7 @@ const Profile: React.FC = () => {
           <img
             src={profile.photoUrl || "/profile.png"}
             alt={profile.name}
-            className="w-40 h-40 rounded-full border-4 border-emerald-400 shadow-xl transform hover:scale-105 transition duration-500 object-cover"
+            className="w-40 h-40 rounded-full border-4 border-emerald-400 shadow-xl transform hover:scale-105 transition duration-500 object-cover relative z-0"
           />
 
           <h1 className="text-4xl md:text-5xl font-extrabold text-emerald-300 mt-4 text-center drop-shadow-lg tracking-wide">

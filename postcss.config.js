@@ -1,7 +1,9 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-     plugins: [
-         required('tailwindcss'), 
-       required('autoprefixer'),
-    ]
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: 'class', // Add this line
+  theme: {
+    extend: {},
+  },
+  plugins: [],
 }
-   

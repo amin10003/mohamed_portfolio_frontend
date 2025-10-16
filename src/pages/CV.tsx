@@ -103,7 +103,7 @@ const CV: React.FC = () => {
               href="mailto:mohamedibrahimyusuf@example.com"
               className="text-emerald-400 hover:underline"
             >
-              mohamedibrahimyusuf@example.com
+              maxamedxasancali10003@example.com
             </a>
           </p>
           <p className="text-gray-400">

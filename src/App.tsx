@@ -1,34 +1,38 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Hobbies from "./pages/Hobbies";
-import Projects from "./pages/Projects";
-import Achievements from "./pages/Achievements";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import MenuIcon from "./components/MenuIcon";
-import "./App.css";
-import Profile from "./pages/Profile";
-import Blog from "./pages/Blog";
+import { Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "./context/ThemeContext";
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import CV from "./pages/CV";
+import Projects from "./pages/Projects";
+import Hobbies from "./pages/Hobbies";
+import Achievements from "./pages/Achievements";
+import Blog from "./pages/Blog";
+import Profile from "./pages/Profile";
+
+const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-1 overflow-y-auto p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/CV" element={<CV />} />
-          <Route path="/hobbies" element={<Hobbies />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/blog" element={<Blog />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/cv" element={<CV />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/hobbies" element={<Hobbies />} />
+              <Route path="/achievements" element={<Achievements />} />
+              <Route path="/blog" element={<Blog />} />
+            </Routes>
+          </main>
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 
