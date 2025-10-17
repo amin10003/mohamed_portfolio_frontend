@@ -1,31 +1,70 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight, FaFileDownload } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Header: React.FC = () => {
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <header className="flex flex-col items-center justify-center text-center py-20 px-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <motion.header
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={`flex flex-col items-center justify-center text-center py-20 px-6 transition-colors duration-300 ${
+        theme === "dark"
+          ? "bg-gray-900 text-gray-200"
+          : "bg-gray-50 text-gray-800"
+      }`}
+    >
       {/* Profile Image */}
-      <img
-        src="/profile.jpg" // replace with your actual image path
+      <motion.img
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        src="/profile.png"
         alt="Mohamed Ibrahim Yusuf"
-        className="w-40 h-40 rounded-full shadow-lg mb-6 border-4 border-emerald-500"
+        className={`w-40 h-40 rounded-full shadow-lg mb-6 border-4 ${
+          theme === "dark" ? "border-emerald-400" : "border-emerald-600"
+        }`}
       />
 
-      {/* Title & Subtitle */}
-      <h1 className="text-4xl sm:text-5xl font-extrabold text-emerald-500 mb-2">
+      {/* Name */}
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className={`text-4xl sm:text-5xl font-extrabold mb-2 ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
         Mohamed Ibrahim Yusuf
-      </h1>
-      <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-6 max-w-2xl">
+      </motion.h1>
+
+      {/* Bio */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className={`text-lg sm:text-xl mb-6 max-w-2xl ${
+          theme === "dark" ? "text-gray-300" : "text-gray-700"
+        }`}
+      >
         Frontend Developer passionate about crafting modern, responsive web
         experiences using React, TypeScript, and Tailwind CSS.
-      </p>
+      </motion.p>
 
       {/* Buttons */}
-      <div className="flex flex-wrap justify-center gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+        className="flex flex-wrap justify-center gap-4"
+      >
         <Link
           to="/projects"
-          className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2 transition"
+          className="px-6 py-2 rounded-lg flex items-center gap-2 transition bg-emerald-500 hover:bg-emerald-600 text-white"
         >
           View Projects <FaArrowRight />
         </Link>
@@ -33,12 +72,16 @@ const Header: React.FC = () => {
         <a
           href="/Mohamed_Ibrahim_Yusuf_CV.pdf"
           download
-          className="px-6 py-2 border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white rounded-lg flex items-center gap-2 transition"
+          className={`px-6 py-2 border rounded-lg flex items-center gap-2 transition ${
+            theme === "dark"
+              ? "border-emerald-400 text-emerald-300 hover:bg-emerald-500/20"
+              : "border-emerald-500 text-emerald-600 hover:bg-emerald-500/10"
+          }`}
         >
           <FaFileDownload /> Download CV
         </a>
-      </div>
-    </header>
+      </motion.div>
+    </motion.header>
   );
 };
 

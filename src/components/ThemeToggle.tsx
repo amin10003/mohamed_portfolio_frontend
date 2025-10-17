@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
-import { FaSun, FaMoon } from "react-icons/fa";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -8,15 +8,14 @@ const ThemeToggle: React.FC = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-full border border-emerald-600 dark:border-emerald-400 text-emerald-600 dark:text-emerald-400 
-                 hover:bg-emerald-500/20 transition duration-300"
+      className={`p-2 rounded-full transition-all duration-300 focus:outline-none ${
+        theme === "dark"
+          ? "bg-gray-700 text-yellow-400 hover:bg-gray-600"
+          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+      }`}
       aria-label="Toggle Theme"
     >
-      {theme === "dark" ? (
-        <FaSun className="text-yellow-400" size={18} />
-      ) : (
-        <FaMoon className="text-gray-700" size={18} />
-      )}
+      {theme === "dark" ? <FaSun /> : <FaMoon />}
     </button>
   );
 };

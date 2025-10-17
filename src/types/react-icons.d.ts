@@ -1,15 +1,14 @@
-// src/types/react-icons.d.ts
 declare module "react-icons/*" {
   import * as React from "react";
 
-  export interface IconBaseProps extends React.SVGAttributes<SVGElement> {
+  export interface IconBaseProps extends React.SVGProps<SVGSVGElement> {
     size?: string | number;
     color?: string;
     title?: string;
-    className?: string; // ✅ critical fix
+    className?: string;
   }
 
-  export type IconType = React.FC<IconBaseProps>;
+  export type IconType = (props: IconBaseProps) => JSX.Element;
 
   export const IconContext: React.Context<{
     color?: string;
