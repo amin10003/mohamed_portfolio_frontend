@@ -225,21 +225,19 @@ const CV: React.FC = () => {
           <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
             📧 Email:{" "}
             <a
-              href="mailto:mohamedibrahimyusuf@example.com"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=maxamedxasancali10003@gmail.com&su=Portfolio%20Inquiry&body=Hi%20Mohamed,"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`hover:underline ${
                 theme === "dark" ? "text-emerald-400" : "text-emerald-500"
               }`}
             >
-              mohamedibrahimyusuf@example.com
+              maxamedxasancali10003@gmail.com
             </a>
           </p>
           <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
             🌍 Location:{" "}
-            <span
-              className={
-                theme === "dark" ? "text-gray-300" : "text-gray-700"
-              }
-            >
+            <span className={theme === "dark" ? "text-gray-300" : "text-gray-700"}>
               Nairobi, Kenya
             </span>
           </p>
