@@ -1,8 +1,64 @@
 import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "../context/ThemeContext";
+import api from "../api/axiosConfig";
+
+// ✅ CV Data Interface
+interface CVData {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  institution: string;
+  location: string;
+  skills: string;
+  achievements: string;
+}
+
+// ✅ Fetch function
+const fetchCVItems = async (): Promise<CVData[]> => {
+  const { data } = await api.get("/cv");
+  return data;
+};
 
 const CV: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+  const { data: cvItems, isLoading, isError } = useQuery<CVData[]>({
+    queryKey: ["cv"],
+    queryFn: fetchCVItems,
+  });
+
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading CV...
+      </div>
+    );
+
+  // Error state
+  if (isError || !cvItems)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load CV.
+      </div>
+    );
+
+  // Group CV items by category
+  const educationItems = cvItems.filter(item => item.category === 'education');
+  const experienceItems = cvItems.filter(item => item.category === 'experience');
+  const projectItems = cvItems.filter(item => item.category === 'project');
 
   return (
     <section
@@ -119,95 +175,146 @@ const CV: React.FC = () => {
             Education
           </h2>
           <div className="space-y-3">
-            <div>
-              <h3 className="font-bold text-lg">Mandera Secondary School</h3>
-              <p className="text-sm italic">Kenya — High School Education</p>
-              <p
-                className={`text-sm ${
-                  theme === "dark" ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                Graduated: 2022
-              </p>
-            </div>
-            <div>
-              <h3 className="font-bold text-lg">Self-Taught Developer</h3>
-              <p className="text-sm italic">
-                Specialized in Frontend Development — HTML, CSS, JavaScript,
-                React, and Tailwind
-              </p>
-              <p
-                className={`text-sm ${
-                  theme === "dark" ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                2023 - Present
-              </p>
-            </div>
+            {educationItems.map((item) => (
+              <div key={item.id}>
+                <h3 className="font-bold text-lg">{item.title}</h3>
+                <p className="text-sm italic">{item.institution} — {item.description}</p>
+                <p
+                  className={`text-sm ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {item.startDate} - {item.current ? 'Present' : item.endDate}
+                </p>
+                {item.achievements && (
+                  <p
+                    className={`text-sm mt-1 ${
+                      theme === "dark" ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {item.achievements}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Projects & Experience Section */}
-        <div className="mb-8">
-          <h2
-            className={`text-2xl font-semibold mb-3 border-b pb-2 ${
-              theme === "dark"
-                ? "text-emerald-300 border-emerald-500/30"
-                : "text-emerald-600 border-emerald-500/30"
-            }`}
-          >
-            Projects & Experience
-          </h2>
-          <div className="space-y-4">
-            <div
-              className={`p-4 rounded-lg transition ${
+        {/* Experience Section */}
+        {experienceItems.length > 0 && (
+          <div className="mb-8">
+            <h2
+              className={`text-2xl font-semibold mb-3 border-b pb-2 ${
                 theme === "dark"
-                  ? "bg-gray-700/30 hover:bg-gray-700/50"
-                  : "bg-gray-100/60 hover:bg-gray-200/50"
+                  ? "text-emerald-300 border-emerald-500/30"
+                  : "text-emerald-600 border-emerald-500/30"
               }`}
             >
-              <h3
-                className={`font-semibold text-lg ${
-                  theme === "dark" ? "text-emerald-300" : "text-emerald-600"
-                }`}
-              >
-                Portfolio Website
-              </h3>
-              <p
-                className={`text-sm ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                Built a responsive portfolio using React, TypeScript, and
-                Tailwind CSS to showcase personal projects and skills.
-              </p>
-            </div>
-
-            <div
-              className={`p-4 rounded-lg transition ${
-                theme === "dark"
-                  ? "bg-gray-700/30 hover:bg-gray-700/50"
-                  : "bg-gray-100/60 hover:bg-gray-200/50"
-              }`}
-            >
-              <h3
-                className={`font-semibold text-lg ${
-                  theme === "dark" ? "text-emerald-300" : "text-emerald-600"
-                }`}
-              >
-                Task Manager App
-              </h3>
-              <p
-                className={`text-sm ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                Developed a simple React app to manage daily tasks with
-                filtering, CRUD functionality, and local storage.
-              </p>
+              Experience
+            </h2>
+            <div className="space-y-4">
+              {experienceItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-lg transition ${
+                    theme === "dark"
+                      ? "bg-gray-700/30 hover:bg-gray-700/50"
+                      : "bg-gray-100/60 hover:bg-gray-200/50"
+                  }`}
+                >
+                  <h3
+                    className={`font-semibold text-lg ${
+                      theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+                    }`}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-sm italic">{item.institution} — {item.location}</p>
+                  <p
+                    className={`text-sm ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    {item.startDate} - {item.current ? 'Present' : item.endDate}
+                  </p>
+                  <p
+                    className={`text-sm mt-2 ${
+                      theme === "dark" ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {item.description}
+                  </p>
+                  {item.skills && (
+                    <div className="mt-2">
+                      <span className="text-xs font-medium">Skills: </span>
+                      <span
+                        className={`text-xs ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        {item.skills}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Projects Section */}
+        {projectItems.length > 0 && (
+          <div className="mb-8">
+            <h2
+              className={`text-2xl font-semibold mb-3 border-b pb-2 ${
+                theme === "dark"
+                  ? "text-emerald-300 border-emerald-500/30"
+                  : "text-emerald-600 border-emerald-500/30"
+              }`}
+            >
+              Projects
+            </h2>
+            <div className="space-y-4">
+              {projectItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-lg transition ${
+                    theme === "dark"
+                      ? "bg-gray-700/30 hover:bg-gray-700/50"
+                      : "bg-gray-100/60 hover:bg-gray-200/50"
+                  }`}
+                >
+                  <h3
+                    className={`font-semibold text-lg ${
+                      theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+                    }`}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    className={`text-sm ${
+                      theme === "dark" ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {item.description}
+                  </p>
+                  {item.skills && (
+                    <div className="mt-2">
+                      <span className="text-xs font-medium">Technologies: </span>
+                      <span
+                        className={`text-xs ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        {item.skills}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Contact Section */}
         <div

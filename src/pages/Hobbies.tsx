@@ -1,31 +1,54 @@
 import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "../context/ThemeContext";
+import api from "../api/axiosConfig";
+
+// ✅ Hobby Data Interface
+interface HobbyData {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  category: string;
+  priority: number;
+}
+
+// ✅ Fetch function
+const fetchHobbies = async (): Promise<HobbyData[]> => {
+  const { data } = await api.get("/hobbies");
+  return data;
+};
 
 const Hobbies: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+  const { data: hobbies, isLoading, isError } = useQuery<HobbyData[]>({
+    queryKey: ["hobbies"],
+    queryFn: fetchHobbies,
+  });
 
-  const hobbies = [
-    {
-      icon: "⚽",
-      title: "Football",
-      desc: "Playing football with friends helps me stay active and build teamwork.",
-    },
-    {
-      icon: "💻",
-      title: "Coding Challenges",
-      desc: "I enjoy solving problems on LeetCode and CodeWars to improve logical thinking.",
-    },
-    {
-      icon: "📖",
-      title: "Reading Tech Blogs",
-      desc: "Keeping up with the latest in JavaScript, React, and modern web technologies.",
-    },
-    {
-      icon: "🎨",
-      title: "UI Design Experiments",
-      desc: "I love creating new UI layouts and experimenting with TailwindCSS.",
-    },
-  ];
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading hobbies...
+      </div>
+    );
+
+  // Error state
+  if (isError || !hobbies)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load hobbies.
+      </div>
+    );
 
   return (
     <section
@@ -53,9 +76,9 @@ const Hobbies: React.FC = () => {
 
         {/* Hobbies Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {hobbies.map((hobby, idx) => (
+          {hobbies.map((hobby) => (
             <div
-              key={idx}
+              key={hobby.id}
               className={`p-6 rounded-2xl border transition-all duration-300 hover:scale-105 shadow-lg ${
                 theme === "dark"
                   ? "bg-gray-700/30 border-gray-700 hover:border-emerald-400 hover:shadow-emerald-500/20"
@@ -75,8 +98,21 @@ const Hobbies: React.FC = () => {
                   theme === "dark" ? "text-gray-300" : "text-gray-700"
                 }`}
               >
-                {hobby.desc}
+                {hobby.description}
               </p>
+              {hobby.category && (
+                <div className="mt-2">
+                  <span
+                    className={`px-2 py-1 text-xs rounded-full ${
+                      theme === "dark"
+                        ? "bg-emerald-900/40 text-emerald-300"
+                        : "bg-emerald-100 text-emerald-700"
+                    }`}
+                  >
+                    {hobby.category}
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

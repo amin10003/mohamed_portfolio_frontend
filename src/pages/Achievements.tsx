@@ -1,40 +1,84 @@
 import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "../context/ThemeContext";
 import { FaAward, FaTrophy, FaStar } from "react-icons/fa";
+import api from "../api/axiosConfig";
+
+// ✅ Achievement Data Interface
+interface AchievementData {
+  id: number;
+  title: string;
+  description: string;
+  year: string;
+  icon: string;
+  category: string;
+}
+
+// ✅ Fetch function
+const fetchAchievements = async (): Promise<AchievementData[]> => {
+  const { data } = await api.get("/achievements");
+  return data;
+};
+
+// // ✅ Icon mapping
+// const getIcon = (iconName: string) => {
+//   switch (iconName.toLowerCase()) {
+//     case 'award':
+//       return <FaAward />;
+//     case 'trophy':
+//       return <FaTrophy />;
+//     case 'star':
+//       return <FaStar />;
+//     default:
+//       return <FaAward />;
+//   }
+// };
+// ✅ Safe Icon Mapping
+const getIcon = (iconName?: string | null) => {
+  if (!iconName) return <FaAward />; // default if icon is null or undefined
+
+  switch (iconName.toLowerCase()) {
+    case "award":
+      return <FaAward />;
+    case "trophy":
+      return <FaTrophy />;
+    case "star":
+      return <FaStar />;
+    default:
+      return <FaAward />;
+  }
+};
 
 const Achievements: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+  const { data: achievements, isLoading, isError } = useQuery<AchievementData[]>({
+    queryKey: ["achievements"],
+    queryFn: fetchAchievements,
+  });
 
-  const achievements = [
-    {
-      icon: <FaAward />,
-      title: "Frontend Development Mastery",
-      description:
-        "Completed full learning path from HTML, CSS, Git, GitHub, and Linux to JavaScript, React, and Tailwind CSS.",
-      year: "2024",
-    },
-    {
-      icon: <FaTrophy />,
-      title: "Portfolio Website Launch",
-      description:
-        "Designed and developed a personal portfolio showcasing my projects, skills, and profile using React + TypeScript.",
-      year: "2025",
-    },
-    {
-      icon: <FaStar />,
-      title: "Community Recognition",
-      description:
-        "Recognized by peers for clean design, strong dedication, and consistency in learning modern frontend tools.",
-      year: "2025",
-    },
-    {
-      icon: <FaTrophy />,
-      title: "Hackathon Winner - Nairobi Tech Challenge",
-      description:
-        "Led a team to build a responsive project management app in under 48 hours, winning 1st place.",
-      year: "2023",
-    },
-  ];
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading achievements...
+      </div>
+    );
+
+  // Error state
+  if (isError || !achievements)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load achievements.
+      </div>
+    );
 
   return (
     <section
@@ -79,9 +123,9 @@ const Achievements: React.FC = () => {
 
         {/* Achievements Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {achievements.map((achievement, idx) => (
+          {achievements.map((achievement) => (
             <div
-              key={idx}
+              key={achievement.id}
               className={`rounded-2xl p-6 border shadow-md hover:shadow-emerald-500/20 hover:scale-105 transition duration-300 text-center ${
                 theme === "dark"
                   ? "bg-gray-700/40 border-gray-700 hover:border-emerald-400"
@@ -93,7 +137,7 @@ const Achievements: React.FC = () => {
                   theme === "dark" ? "text-emerald-300" : "text-emerald-600"
                 }`}
               >
-                {achievement.icon}
+                {getIcon(achievement.icon)}
               </div>
               <h2
                 className={`text-xl font-semibold mb-2 ${

@@ -1,26 +1,57 @@
 import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "../context/ThemeContext";
+import api from "../api/axiosConfig";
+
+// ✅ Blog Data Interface
+interface BlogData {
+  id: number;
+  title: string;
+  content: string;
+  excerpt: string;
+  author: string;
+  publishedAt: string;
+  tags: string;
+  readTime: number;
+  featured: boolean;
+}
+
+// ✅ Fetch function
+const fetchBlogPosts = async (): Promise<BlogData[]> => {
+  const { data } = await api.get("/blogs");
+  return data;
+};
 
 const Blog: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+  const { data: posts, isLoading, isError } = useQuery<BlogData[]>({
+    queryKey: ["blogs"],
+    queryFn: fetchBlogPosts,
+  });
 
-  const posts = [
-    {
-      title: "How I Built My Portfolio with React & Tailwind",
-      link: "#",
-      desc: "A step-by-step guide on setting up my portfolio using React, TypeScript, and TailwindCSS.",
-    },
-    {
-      title: "TailwindCSS Tips for Beginners",
-      link: "#",
-      desc: "Top strategies for using Tailwind effectively — from responsive design to custom themes and reusable utilities.",
-    },
-    {
-      title: "React Router Made Simple",
-      link: "#",
-      desc: "Breaking down React Router in a beginner-friendly way with real project-based examples.",
-    },
-  ];
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading blog posts...
+      </div>
+    );
+
+  // Error state
+  if (isError || !posts)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load blog posts.
+      </div>
+    );
 
   return (
     <section
@@ -57,9 +88,9 @@ const Blog: React.FC = () => {
 
         {/* Blog Posts */}
         <div className="grid sm:grid-cols-2 gap-8">
-          {posts.map((post, idx) => (
+          {posts.map((post) => (
             <article
-              key={idx}
+              key={post.id}
               className={`rounded-2xl p-6 border transition-all duration-300 hover:scale-105 shadow-lg ${
                 theme === "dark"
                   ? "bg-gray-700/30 border-gray-700 hover:border-emerald-400"
@@ -78,10 +109,40 @@ const Blog: React.FC = () => {
                   theme === "dark" ? "text-gray-300" : "text-gray-700"
                 }`}
               >
-                {post.desc}
+                {post.excerpt}
               </p>
+              
+              {/* Tags */}
+              {post.tags && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {post.tags.split(',').map((tag, index) => (
+                    <span
+                      key={index}
+                      className={`px-2 py-1 text-xs rounded-full ${
+                        theme === "dark"
+                          ? "bg-emerald-900/40 text-emerald-300"
+                          : "bg-emerald-100 text-emerald-700"
+                      }`}
+                    >
+                      {tag.trim()}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Meta info */}
+              <div className={`text-xs mb-3 ${
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              }`}>
+                <span>By {post.author}</span>
+                <span className="mx-2">•</span>
+                <span>{post.readTime} min read</span>
+                <span className="mx-2">•</span>
+                <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+              </div>
+
               <a
-                href={post.link}
+                href={`/blog/${post.id}`}
                 className={`text-sm font-medium hover:underline transition-colors duration-300 ${
                   theme === "dark" ? "text-emerald-400" : "text-emerald-600"
                 }`}

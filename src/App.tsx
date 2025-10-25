@@ -10,30 +10,39 @@ import Achievements from "./pages/Achievements";
 import CV from "./pages/CV";
 import Blog from "./pages/Blog";
 import Hobbies from "./pages/Hobbies";
+import Footer from "./components/Footer";
 
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <Navbar />
+      <div className="flex flex-col min-h-screen bg-gray-900">
+        {/* ✅ Always visible Navbar */}
+        <Navbar />
 
-      {/* ✅ Show Header only on Home page */}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Header />
-              <Home />
-            </>
-          }
-        />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/achievements" element={<Achievements />} />
-        <Route path="/cv" element={<CV />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/hobbies" element={<Hobbies />} />
-      </Routes>
+        {/* ✅ Main content area */}
+        <main className="flex-grow">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Header />
+                  <Home />
+                </>
+              }
+            />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/cv" element={<CV />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/hobbies" element={<Hobbies />} />
+          </Routes>
+        </main>
+
+        {/* ✅ Footer now touches content */}
+        <Footer />
+      </div>
     </ThemeProvider>
   );
 };

@@ -1,48 +1,57 @@
 import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "../context/ThemeContext";
 import { FaGithub, FaExternalLinkAlt, FaLaptopCode } from "react-icons/fa";
+import api from "../api/axiosConfig";
+
+// ✅ Project Data Interface
+interface ProjectData {
+  id: number;
+  title: string;
+  description: string;
+  techStack: string;
+  repoUrl: string;
+  liveUrl: string;
+  coverImage: string;
+  createdAt: string;
+}
+
+// ✅ Fetch function
+const fetchProjects = async (): Promise<ProjectData[]> => {
+  const { data } = await api.get("/projects");
+  return data;
+};
 
 const Projects: React.FC = () => {
   const { theme } = useContext(ThemeContext);
+  const { data: projects, isLoading, isError } = useQuery<ProjectData[]>({
+    queryKey: ["projects"],
+    queryFn: fetchProjects,
+  });
 
-  const projects = [
-    {
-      title: "Portfolio Website",
-      description:
-        "A modern personal portfolio built with React, TypeScript, and TailwindCSS featuring multiple pages, dark/light mode, and API integration.",
-      image: "/projects/portfolio.png",
-      demo: "#",
-      code: "#",
-      tech: ["React", "TypeScript", "TailwindCSS"],
-    },
-    {
-      title: "Task Manager App",
-      description:
-        "A responsive task management web app with CRUD functionality, using React Query and a Node.js + Express backend.",
-      image: "/projects/taskapp.png",
-      demo: "#",
-      code: "#",
-      tech: ["React", "Express", "MongoDB"],
-    },
-    {
-      title: "Weather Dashboard",
-      description:
-        "Weather forecast dashboard fetching live data from OpenWeather API with dynamic background themes.",
-      image: "/projects/weather.png",
-      demo: "#",
-      code: "#",
-      tech: ["JavaScript", "API", "TailwindCSS"],
-    },
-    {
-      title: "School Admission Form",
-      description:
-        "Interactive and colorful admission form for Mandera Secondary School with form validation and Tailwind CSS layout.",
-      image: "/projects/admission.png",
-      demo: "#",
-      code: "#",
-      tech: ["HTML", "TailwindCSS", "JavaScript"],
-    },
-  ];
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading projects...
+      </div>
+    );
+
+  // Error state
+  if (isError || !projects)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load projects.
+      </div>
+    );
 
   return (
     <section
@@ -85,18 +94,18 @@ const Projects: React.FC = () => {
 
         {/* Project Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, idx) => (
+          {projects.map((project) => (
             <div
-              key={idx}
+              key={project.id}
               className={`rounded-2xl overflow-hidden shadow-lg border transform hover:scale-105 transition duration-300 ${
                 theme === "dark"
                   ? "bg-gray-700/40 border-gray-700 hover:border-emerald-400"
                   : "bg-gray-100/70 border-gray-300 hover:border-emerald-500"
               }`}
             >
-              {project.image && (
+              {project.coverImage && (
                 <img
-                  src={project.image}
+                  src={project.coverImage}
                   alt={project.title}
                   className="w-full h-48 object-cover"
                 />
@@ -119,7 +128,7 @@ const Projects: React.FC = () => {
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech, i) => (
+                  {project.techStack && project.techStack.split(',').map((tech, i) => (
                     <span
                       key={i}
                       className={`px-3 py-1 text-xs rounded-full font-medium ${
@@ -128,37 +137,41 @@ const Projects: React.FC = () => {
                           : "bg-emerald-100 text-emerald-700"
                       }`}
                     >
-                      {tech}
+                      {tech.trim()}
                     </span>
                   ))}
                 </div>
 
                 {/* Buttons */}
                 <div className="flex items-center justify-between">
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 text-sm font-medium transition ${
-                      theme === "dark"
-                        ? "text-emerald-400 hover:text-emerald-300"
-                        : "text-emerald-700 hover:text-emerald-600"
-                    }`}
-                  >
-                    <FaExternalLinkAlt /> Demo
-                  </a>
-                  <a
-                    href={project.code}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 text-sm font-medium transition ${
-                      theme === "dark"
-                        ? "text-gray-300 hover:text-emerald-400"
-                        : "text-gray-700 hover:text-emerald-600"
-                    }`}
-                  >
-                    <FaGithub /> Code
-                  </a>
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 text-sm font-medium transition ${
+                        theme === "dark"
+                          ? "text-emerald-400 hover:text-emerald-300"
+                          : "text-emerald-700 hover:text-emerald-600"
+                      }`}
+                    >
+                      <FaExternalLinkAlt /> Demo
+                    </a>
+                  )}
+                  {project.repoUrl && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 text-sm font-medium transition ${
+                        theme === "dark"
+                          ? "text-gray-300 hover:text-emerald-400"
+                          : "text-gray-700 hover:text-emerald-600"
+                      }`}
+                    >
+                      <FaGithub /> Code
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
