@@ -1,64 +1,179 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ThemeContext } from "../context/ThemeContext";
 import { FaAward, FaTrophy, FaStar } from "react-icons/fa";
+import api from "../api/axiosConfig";
+
+// ✅ Achievement Data Interface
+interface AchievementData {
+  id: number;
+  title: string;
+  description: string;
+  year: string;
+  icon: string;
+  category: string;
+}
+
+// ✅ Fetch function
+const fetchAchievements = async (): Promise<AchievementData[]> => {
+  const { data } = await api.get("/achievements");
+  return data;
+};
+
+// // ✅ Icon mapping
+// const getIcon = (iconName: string) => {
+//   switch (iconName.toLowerCase()) {
+//     case 'award':
+//       return <FaAward />;
+//     case 'trophy':
+//       return <FaTrophy />;
+//     case 'star':
+//       return <FaStar />;
+//     default:
+//       return <FaAward />;
+//   }
+// };
+// ✅ Safe Icon Mapping
+const getIcon = (iconName?: string | null) => {
+  if (!iconName) return <FaAward />; // default if icon is null or undefined
+
+  switch (iconName.toLowerCase()) {
+    case "award":
+      return <FaAward />;
+    case "trophy":
+      return <FaTrophy />;
+    case "star":
+      return <FaStar />;
+    default:
+      return <FaAward />;
+  }
+};
 
 const Achievements: React.FC = () => {
-  const achievements = [
-    {
-      icon: <FaAward className="text-emerald-400 text-3xl mb-2" />,
-      title: "Frontend Development Mastery",
-      description:
-        "Completed full learning path from HTML, CSS, Git, GitHub, and Linux to JavaScript and React with Tailwind CSS.",
-      year: "2024",
-    },
-    {
-      icon: <FaTrophy className="text-emerald-400 text-3xl mb-2" />,
-      title: "Portfolio Website Launch",
-      description:
-        "Designed and developed a personal portfolio showcasing projects, profile, and CV using React + TypeScript.",
-      year: "2025",
-    },
-    {
-      icon: <FaStar className="text-emerald-400 text-3xl mb-2" />,
-      title: "Community Recognition",
-      description:
-        "Recognized by peers for consistency, clean design, and strong dedication to learning modern frontend tools.",
-      year: "2025",
-    },
-  ];
+  const { theme } = useContext(ThemeContext);
+  const { data: achievements, isLoading, isError } = useQuery<AchievementData[]>({
+    queryKey: ["achievements"],
+    queryFn: fetchAchievements,
+  });
+
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading achievements...
+      </div>
+    );
+
+  // Error state
+  if (isError || !achievements)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load achievements.
+      </div>
+    );
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 p-10">
-      <div className="max-w-5xl mx-auto bg-gray-800/40 shadow-2xl rounded-2xl p-10 border border-gray-700 backdrop-blur-sm">
+    <section
+      className={`min-h-screen flex items-center justify-center p-8 transition-colors duration-500 ${
+        theme === "dark"
+          ? "bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-gray-200"
+          : "bg-gradient-to-b from-blue-50 via-indigo-50 to-purple-50 text-gray-800"
+      }`}
+    >
+      <div
+        className={`w-full max-w-6xl backdrop-blur-md rounded-3xl p-10 shadow-2xl border transition-all duration-500 ${
+          theme === "dark"
+            ? "bg-gray-800/60 border-gray-700"
+            : "bg-white/80 border-gray-300"
+        }`}
+      >
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold text-emerald-300 mb-2 tracking-wide">
+          <img
+            src="/profile.png"
+            alt="Achievements"
+            className={`w-32 h-32 rounded-full border-4 shadow-lg mx-auto mb-4 object-cover ${
+              theme === "dark" ? "border-emerald-400" : "border-emerald-600"
+            }`}
+          />
+          <h1
+            className={`text-4xl font-extrabold mb-2 tracking-wide ${
+              theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+            }`}
+          >
             Achievements
           </h1>
-          <p className="text-gray-200 text-lg italic">
-            Milestones that mark my growth and dedication as a Frontend Developer
+          <p
+            className={`italic text-lg ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
+            A showcase of my milestones, certifications, and recognitions as a
+            frontend developer.
           </p>
         </div>
 
         {/* Achievements Grid */}
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {achievements.map((ach, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {achievements.map((achievement) => (
             <div
-              key={index}
-              className="bg-gray-700/30 p-6 rounded-xl shadow-lg text-center border border-gray-700 hover:scale-105 hover:border-emerald-400 transition-transform duration-300"
+              key={achievement.id}
+              className={`rounded-2xl p-6 border shadow-md hover:shadow-emerald-500/20 hover:scale-105 transition duration-300 text-center ${
+                theme === "dark"
+                  ? "bg-gray-700/40 border-gray-700 hover:border-emerald-400"
+                  : "bg-gray-100/70 border-gray-300 hover:border-emerald-500"
+              }`}
             >
-              {ach.icon}
-              <h2 className="text-xl font-semibold text-emerald-300 mb-1">
-                {ach.title}
+              <div
+                className={`flex justify-center items-center mb-3 text-4xl ${
+                  theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+                }`}
+              >
+                {getIcon(achievement.icon)}
+              </div>
+              <h2
+                className={`text-xl font-semibold mb-2 ${
+                  theme === "dark" ? "text-emerald-300" : "text-emerald-700"
+                }`}
+              >
+                {achievement.title}
               </h2>
-              <p className="text-gray-200 text-sm mb-2">{ach.description}</p>
-              <p className="text-gray-400 text-xs italic">{ach.year}</p>
+              <p
+                className={`text-sm mb-2 leading-relaxed ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                {achievement.description}
+              </p>
+              <p
+                className={`text-xs italic ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                Year: {achievement.year}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Footer Note */}
-        <div className="text-center mt-12 text-gray-400 text-sm border-t border-gray-700 pt-4">
-          “Every achievement is a step closer to mastering the art of code and design.”
+        {/* Footer Quote */}
+        <div
+          className={`text-center mt-12 text-sm border-t pt-4 ${
+            theme === "dark"
+              ? "text-gray-400 border-gray-700"
+              : "text-gray-600 border-gray-300"
+          }`}
+        >
+          “Every achievement is a step closer to mastering the art of code and
+          design.”
         </div>
       </div>
     </section>

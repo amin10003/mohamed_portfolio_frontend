@@ -1,86 +1,193 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ThemeContext } from "../context/ThemeContext";
+import { FaGithub, FaExternalLinkAlt, FaLaptopCode } from "react-icons/fa";
+import api from "../api/axiosConfig";
+
+// ✅ Project Data Interface
+interface ProjectData {
+  id: number;
+  title: string;
+  description: string;
+  techStack: string;
+  repoUrl: string;
+  liveUrl: string;
+  coverImage: string;
+  createdAt: string;
+}
+
+// ✅ Fetch function
+const fetchProjects = async (): Promise<ProjectData[]> => {
+  const { data } = await api.get("/projects");
+  return data;
+};
 
 const Projects: React.FC = () => {
-  const projects = [
-    {
-      title: "Portfolio Website",
-      description:
-        "A personal portfolio built with React, TypeScript, and TailwindCSS showcasing my skills and projects.",
-      demo: "#",
-      code: "#",
-    },
-    {
-      title: "Task Manager App",
-      description:
-        "A full-stack MERN application for managing daily tasks with authentication and responsive UI.",
-      demo: "#",
-      code: "#",
-    },
-    {
-      title: "E-commerce Store",
-      description:
-        "An online shop built with React and Redux, including product filters, cart functionality, and checkout flow.",
-      demo: "#",
-      code: "#",
-    },
-    {
-      title: "Blog Platform",
-      description:
-        "A blogging platform built with Next.js, Markdown support, and dynamic routing.",
-      demo: "#",
-      code: "#",
-    },
-  ];
+  const { theme } = useContext(ThemeContext);
+  const { data: projects, isLoading, isError } = useQuery<ProjectData[]>({
+    queryKey: ["projects"],
+    queryFn: fetchProjects,
+  });
+
+  // Loading state
+  if (isLoading)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+        }`}
+      >
+        Loading projects...
+      </div>
+    );
+
+  // Error state
+  if (isError || !projects)
+    return (
+      <div
+        className={`flex items-center justify-center min-h-screen text-lg ${
+          theme === "dark" ? "text-red-400" : "text-red-600"
+        }`}
+      >
+        Failed to load projects.
+      </div>
+    );
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-8">
-      <div className="w-full max-w-5xl bg-gray-800/60 backdrop-blur-md rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fadeIn text-gray-200">
-        <div className="text-center mb-10">
-          <img
-            src="/profile.png"
-            alt="Projects"
-            className="w-32 h-32 rounded-full border-4 border-emerald-400 shadow-lg mx-auto mb-4 object-cover"
+    <section
+      className={`min-h-screen flex items-center justify-center p-8 transition-colors duration-500 ${
+        theme === "dark"
+          ? "bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-gray-200"
+          : "bg-gradient-to-b from-blue-50 via-indigo-50 to-purple-50 text-gray-800"
+      }`}
+    >
+      <div
+        className={`w-full max-w-6xl backdrop-blur-md rounded-3xl p-10 shadow-2xl border transition-all duration-500 ${
+          theme === "dark"
+            ? "bg-gray-800/60 border-gray-700"
+            : "bg-white/80 border-gray-300"
+        }`}
+      >
+        {/* Header */}
+        <div className="text-center mb-12">
+          <FaLaptopCode
+            className={`mx-auto text-5xl mb-4 ${
+              theme === "dark" ? "text-emerald-400" : "text-emerald-600"
+            }`}
           />
-          <h1 className="text-4xl font-extrabold text-emerald-300 mb-2 tracking-wide">
+          <h1
+            className={`text-4xl font-extrabold mb-2 tracking-wide ${
+              theme === "dark" ? "text-emerald-300" : "text-emerald-600"
+            }`}
+          >
             Projects
           </h1>
-          <p className="text-gray-400 italic">
-            A collection of my featured works and practical experiences.
+          <p
+            className={`italic text-lg ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
+            A collection of my featured works that blend creativity and clean
+            code.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {projects.map((project, idx) => (
+        {/* Project Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project) => (
             <div
-              key={idx}
-              className="bg-gray-700/50 rounded-2xl p-6 border border-gray-700 hover:border-emerald-400 shadow-md hover:shadow-emerald-500/20 transition duration-300"
+              key={project.id}
+              className={`rounded-2xl overflow-hidden shadow-lg border transform hover:scale-105 transition duration-300 ${
+                theme === "dark"
+                  ? "bg-gray-700/40 border-gray-700 hover:border-emerald-400"
+                  : "bg-gray-100/70 border-gray-300 hover:border-emerald-500"
+              }`}
             >
-              <h2 className="text-2xl font-semibold text-emerald-400 mb-3">
-                {project.title}
-              </h2>
-              <p className="text-gray-300 mb-4 leading-relaxed">
-                {project.description}
-              </p>
-              <div className="flex gap-3">
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 text-sm border border-gray-600 rounded-lg hover:border-emerald-400 hover:text-emerald-300 transition"
+              {project.coverImage && (
+                <img
+                  src={project.coverImage}
+                  alt={project.title}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-6">
+                <h2
+                  className={`text-xl font-bold mb-2 ${
+                    theme === "dark" ? "text-emerald-300" : "text-emerald-700"
+                  }`}
                 >
-                  Demo
-                </a>
-                <a
-                  href={project.code}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 text-sm border border-emerald-400 bg-emerald-500/20 rounded-lg hover:bg-emerald-500/30 transition"
+                  {project.title}
+                </h2>
+                <p
+                  className={`text-sm mb-3 leading-relaxed ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
                 >
-                  Code
-                </a>
+                  {project.description}
+                </p>
+
+                {/* Tech Stack */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.techStack && project.techStack.split(',').map((tech, i) => (
+                    <span
+                      key={i}
+                      className={`px-3 py-1 text-xs rounded-full font-medium ${
+                        theme === "dark"
+                          ? "bg-emerald-900/40 text-emerald-300"
+                          : "bg-emerald-100 text-emerald-700"
+                      }`}
+                    >
+                      {tech.trim()}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Buttons */}
+                <div className="flex items-center justify-between">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 text-sm font-medium transition ${
+                        theme === "dark"
+                          ? "text-emerald-400 hover:text-emerald-300"
+                          : "text-emerald-700 hover:text-emerald-600"
+                      }`}
+                    >
+                      <FaExternalLinkAlt /> Demo
+                    </a>
+                  )}
+                  {project.repoUrl && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 text-sm font-medium transition ${
+                        theme === "dark"
+                          ? "text-gray-300 hover:text-emerald-400"
+                          : "text-gray-700 hover:text-emerald-600"
+                      }`}
+                    >
+                      <FaGithub /> Code
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Footer Quote */}
+        <div
+          className={`text-center mt-12 text-sm border-t pt-4 ${
+            theme === "dark"
+              ? "text-gray-400 border-gray-700"
+              : "text-gray-600 border-gray-300"
+          }`}
+        >
+          “Each project is a new challenge — a step forward in mastering both
+          logic and aesthetics.”
         </div>
       </div>
     </section>
